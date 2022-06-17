@@ -1,0 +1,22 @@
+#!/bin/sh
+for OUTPUT in "$@"
+do
+   block=`grep -A 17 " | the final estimated combined collision/absorption/track-length keff = " "$OUTPUT"`
+   char134=${block:134:1}
+   if [ "$char134" = "|" ]; then
+     line_length=133        # lines end with only linefeed (LF) character
+   else
+     line_length=134        # lines end with carriage return (CR) and LF characters
+   fi
+#   echo $char134, $line_length
+   k_eff=${block:73:7}
+   sigma=${block:121:7}
+   anecf=${block:6*$line_length+48:10}
+   eanlcf=${block:7*$line_length+78:10}
+   therm=${block:10*$line_length+24:6}
+   inter=${block:10*$line_length+62:6}
+   fast=${block:10*$line_length+91:6}
+   block=`grep " comment. Source entropy convergence check passed." "$OUTPUT"`
+   entchk=${block:43:6}
+   echo $OUTPUT":"$k_eff":"$sigma":"$anecf":"$eanlcf":"$therm":"$inter":"$fast":"$entchk
+done

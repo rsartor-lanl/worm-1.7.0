@@ -1,0 +1,25 @@
+#!/usr/bin/perl
+
+if (@ARGV) {
+    for $file (@ARGV) {
+        open FILE, "<$file" or die "$0: open failed: $file: $!\n";
+            push @files, sort worm_sort <FILE>;
+        close FILE;
+    }
+    @output = sort worm_sort @files;
+} else {
+    @output = sort worm_sort <>;
+}
+
+for (@output) { print }
+
+sub worm_sort {
+    @a = split /_/, $a;
+    @b = split /_/, $b;
+    $return = 0;
+    while (@a && @b) {
+       $return = shift @a <=> shift @b;
+       last unless $return == 0;
+   }
+   return $return;
+}

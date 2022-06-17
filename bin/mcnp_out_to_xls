@@ -1,0 +1,3 @@
+#!/bin/sh
+([ -e *_key ] && echo *_key ':keff_sigma_anecf_eanlcf_therm_inter_fast_Shannon') | perl -pe 's/^[^_]+_//; s/_key //; s/[_:]/\t/g;';
+find . -maxdepth 1 -type f -name \*_out -exec gmks {} \; | worm_sort | perl -pe 's/^[^_]+_//; s/[_:]/\t/g; s/\t(in|out)//g;'
