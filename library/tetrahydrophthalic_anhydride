@@ -1,0 +1,8 @@
+C ------------------------------------------------------------------------------
+C Tetrahydrophthalic Anhydride:
+C Density = <tetrahydrophthalic_anhydride_density = 1.4 | 2.2> g/cc
+C ------------------------------------------------------------------------------
+m<tetrahydrophthalic_anhydride|3l>    1001.80c    -5.299456E-02
+        6000.80c    -0.631607
+        8016.80c    -0.315398
+mt<tetrahydrophthalic_anhydride|3l>    poly.20t

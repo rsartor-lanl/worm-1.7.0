@@ -1,0 +1,25 @@
+C ------------------------------------------------------------------------------
+C Uranium Metal (235U & 238U):
+C Density = <u235_238_density = 18.95 | 2.4> g/cc
+C
+C User must define the weight fraction for 92235 within the input file.
+C Variable: u235_238_weight_fraction = <u235_238_weight_fraction>
+C Variable Range: (0.0 < u235_238_weight_fraction <= 1.0)
+C ------------------------------------------------------------------------------
+C Variable passed check (0 = yes, 1 = no): <&u235_238_validate_input(u235_238_weight_fraction)>
+<perl>
+sub u235_238_validate_input {
+        my $weight_fraction = shift;
+        die "u235_238 material error: u235_238_weight_fraction must be defined\n" unless defined $weight_fraction;
+        die "u235_238 material error: u235_238_weight_fraction must be greater than 0.0\n" unless $weight_fraction > 0.0;
+        die "u235_238 material error: u235_238_weight_fraction must be less than 1.0\n" if $weight_fraction > 1.0;
+}
+</perl>
+# -- Calculate weight fractions for all of the nuclides --
+#
+# Nuclide weight fractions:
+#       <weight_fraction_92235 = u235_238_weight_fraction>
+#       <weight_fraction_92238 = (1 - u235_238_weight_fraction)>
+#
+m<u235_238|3l>   92235.80c    <-weight_fraction_92235|7s>
+       92238.80c    <-weight_fraction_92238|7s>

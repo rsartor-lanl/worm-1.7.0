@@ -1,0 +1,68 @@
+C ------------------------------------------------------------------------------
+C Uranium Molybdenum (U-Mo) Alloy:
+C Density = <uxmo_density = rho_e2 | 2.4> g/cc
+C
+C User must define the weight fraction for 92235 in uranium within the input file.
+C Variable: u235_238_weight_fraction = <u235_238_weight_fraction>
+C Variable Range: (0.0 < u235_238_weight_fraction <= 1.0)
+C 
+C User must define the weight percent of molybdenum within the input file.
+C Variable: uxmo_weight_fraction = <uxmo_weight_fraction>
+C Variable Range: (0.055 <= uxmo_weight_fraction <= 0.162) wt.%
+C ------------------------------------------------------------------------------
+C Variable passed check (0 = yes, 1 = no): <&u235_238_validate_input(u235_238_weight_fraction)>
+C Variable passed check (0 = yes, 1 = no): <&uxmo_validate_input(uxmo_weight_fraction)>
+<perl>
+sub u235_238_validate_input {
+        my $weight_fraction = shift;
+        die "u235_238 material error: u235_238_weight_fraction must be defined\n" unless defined $weight_fraction;
+        die "u235_238 material error: u235_238_weight_fraction must be greater than 0.0\n" unless $weight_fraction > 0.0;
+        die "u235_238 material error: u235_238_weight_fraction must be less than 1.0\n" if $weight_fraction > 1.0;
+}
+</perl>
+<perl>
+sub uxmo_validate_input {
+        my $weight_fraction = shift;
+        die "uxmo material error: uxmo_weight_fraction must be defined\n" unless defined $weight_fraction;
+        die "uxmo material error: uxmo_weight_fraction must be greater than or equal to 0.055\n" unless $weight_fraction >= 0.055;
+        die "uxmo material error: uxmo_weight_fraction must be less than or equal to 0.162\n" if $weight_fraction > 0.162;
+}
+</perl>
+# -- Calculate weight fractions for all of the nuclides --
+#
+# Atomic masses:
+#       <mass_92235 = 235.0439301>
+#       <mass_92238 = 238.0507884>
+#
+# Nuclide weight fractions:
+#       <fwmo = uxmo_weight_fraction>
+#       <weight_fraction_42092 = (fwmo * 1.391631E-01)>
+#       <weight_fraction_42094 = (fwmo * 8.954079E-02)>
+#       <weight_fraction_42095 = (fwmo * 1.566603E-01)>
+#       <weight_fraction_42096 = (fwmo * 1.666043E-01)>
+#       <weight_fraction_42097 = (fwmo * 9.694663E-02)>
+#       <weight_fraction_42098 = (fwmo * 2.488452E-01)>
+#       <weight_fraction_42100 = (fwmo * 1.022398E-01)>
+#       <weight_fraction_92235 = (1 - fwmo) * u235_238_weight_fraction>
+#       <weight_fraction_92238 = (1 - fwmo) * (1 - u235_238_weight_fraction)>
+#
+# Input for density formula:
+#       <e1 = 0.7204>
+#       <e2 = 100 / (1 + (mass_92235 / mass_92238) * (1 / u235_238_weight_fraction -1))>
+#       <mass_mo = 95.96>
+#       <mass_u = mass_92235 * u235_238_weight_fraction + mass_92238 * (1 - u235_238_weight_fraction)>
+#       <atom_percent_mo = 100 / (1 + (mass_mo/mass_u) * (1/fwmo - 1))>
+#
+# Density (empirical formula):
+#       <rho_e1 = (0.05336 + 0.0445 * fwmo) ** (-1)>
+#       <rho_e2 = rho_e1 * (238.05 + 1.421 * atom_percent_mo - 0.0301 * (1 - 0.01*atom_percent_mo) * e2) / (238.05 + 1.421 * atom_percent_mo - 0.0301* (1 - 0.01*atom_percent_mo) * e1)>
+#
+m<uxmo|3l>   42092.80c    <-weight_fraction_42092|7s>
+       42094.80c    <-weight_fraction_42094|7s>
+       42095.80c    <-weight_fraction_42095|7s>
+       42096.80c    <-weight_fraction_42096|7s>
+       42097.80c    <-weight_fraction_42097|7s>
+       42098.80c    <-weight_fraction_42098|7s>
+       42100.80c    <-weight_fraction_42100|7s>
+       92235.80c    <-weight_fraction_92235|7s>
+       92238.80c    <-weight_fraction_92238|7s>

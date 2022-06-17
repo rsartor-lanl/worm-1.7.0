@@ -1,0 +1,34 @@
+C ------------------------------------------------------------------------------
+C Uranium(V,VI) Oxide with Variable Enrichment (U3O8):
+C Density = <u3o8_enrichment_density = 8.38 | 2.3> g/cc
+C
+C User must define the weight fraction for 92235 within the input file.
+C Variable: u3o8_enrichment_weight_fraction = <u3o8_enrichment_weight_fraction>
+C Variable Range: (0.0 < u3o8_enrichment_weight_fraction <= 1.0)
+C ------------------------------------------------------------------------------
+C Variable passed check (0 = yes, 1 = no): <&u3o8_enrichment_validate_input(u3o8_enrichment_weight_fraction)>
+<perl>
+sub u3o8_enrichment_validate_input {
+	my $weight_fraction = shift;
+	die "u3o8_enrichment material error: u3o8_enrichment_weight_fraction must be defined\n" unless defined $weight_fraction;
+	die "u3o8_enrichment material error: u3o8_enrichment_weight_fraction must be greater than 0.0\n" unless $weight_fraction > 0.0;
+	die "u3o8_enrichment material error: u3o8_enrichment_weight_fraction must be less than 1.0\n" if $weight_fraction > 1.0;
+}
+</perl>
+# -- Calculate weight fractions for all of the nuclides --
+# Atom fraction of element 92:
+#	<elemfrac_92_in_u3o8_enrichment = 0.272727272727>
+#
+# Atomic masses:
+# 	<mass_8016 = 15.99491461957>
+# 	<mass_92238 = 238.0507884>
+# 	<mass_92235 = 235.0439301>
+#
+# Nuclide atom fractions:
+# 	<atom_fraction_92235 = elemfrac_92_in_u3o8_enrichment * (u3o8_enrichment_weight_fraction / mass_92235) / (u3o8_enrichment_weight_fraction / mass_92235 + 1.0 * (1 - u3o8_enrichment_weight_fraction) / mass_92238)>
+# 	<atom_fraction_92238 = elemfrac_92_in_u3o8_enrichment * (1 - u3o8_enrichment_weight_fraction) * (1.0 / mass_92238) / (u3o8_enrichment_weight_fraction / mass_92235 + 1.0 * (1 - u3o8_enrichment_weight_fraction) / mass_92238)> 
+#	<atom_fraction_8016 = 0.727272727273>
+#
+m<u3o8_enrichment|3l>    8016.80c    <atom_fraction_8016|7s>
+       92235.80c    <atom_fraction_92235|7s>
+       92238.80c    <atom_fraction_92238|7s>

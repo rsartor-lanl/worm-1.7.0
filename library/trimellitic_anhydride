@@ -1,0 +1,8 @@
+C ------------------------------------------------------------------------------
+C Trimellitic Anhydride:
+C Density = <trimellitic_anhydride_density = 1.55 | 2.3> g/cc
+C ------------------------------------------------------------------------------
+m<trimellitic_anhydride|3l>    1001.80c    -2.098430E-02
+        6000.80c    -0.562721
+        8016.80c    -0.416295
+mt<trimellitic_anhydride|3l>    poly.20t
