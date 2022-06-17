@@ -1,0 +1,25 @@
+C ------------------------------------------------------------------------------
+C Plutonium Metal (239Pu & 240Pu):
+C Density = <pu239_240_density = 19.84 | 2.2 > g/cc
+C
+C User must define the weight fraction for 94240 within the input file.
+C Variable: pu239_240_weight_fraction = <pu239_240_weight_fraction>
+C Variable Range: (0.0 < pu239_240_weight_fraction <= 1.0)
+C ------------------------------------------------------------------------------
+C Variable passed check (0 = yes, 1 = no): <&pu239_240_validate_input(pu239_240_weight_fraction)>
+<perl>
+sub pu239_240_validate_input {
+        my $weight_fraction = shift;
+        die "pu239_240 material error: pu239_240_weight_fraction must be defined\n" unless defined $weight_fraction;
+        die "pu239_240 material error: pu239_240_weight_fraction must be greater than 0.0\n" unless $weight_fraction > 0.0;
+        die "pu239_240 material error: pu239_240_weight_fraction must be less than 1.0\n" if $weight_fraction > 1.0;
+}
+</perl>
+# -- Calculate weight fractions for all of the nuclides --
+#
+# Nuclide weight fractions:
+#       <weight_fraction_94240 = pu239_240_weight_fraction>
+#       <weight_fraction_94239 = (1 - pu239_240_weight_fraction)>
+#
+m<pu239_240|3l>   94239.80c    <-weight_fraction_94239|7s>
+       94240.80c    <-weight_fraction_94240|7s>

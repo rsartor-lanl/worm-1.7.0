@@ -1,0 +1,33 @@
+C ------------------------------------------------------------------------------
+C Plutonium Oxide (239Pu & 240Pu):
+C Density = <pu239_240_oxide_density = 11.46 | 2.2 > g/cc
+C
+C User must define the weight fraction for 94240 within the input file.
+C Variable: pu239_240_oxide_weight_fraction = <pu239_240_oxide_weight_fraction>
+C Variable Range: (0.0 < pu239_240_oxide_weight_fraction <= 1.0)
+C ------------------------------------------------------------------------------
+C Variable passed check (0 = yes, 1 = no): <&pu239_240_oxide_validate_input(pu239_240_oxide_weight_fraction)>
+<perl>
+sub pu239_240_oxide_validate_input {
+        my $weight_fraction = shift;
+        die "pu239_240_oxide material error: pu239_240_oxide_weight_fraction must be defined\n" unless defined $weight_fraction;
+        die "pu239_240_oxide material error: pu239_240_oxide_weight_fraction must be greater than 0.0\n" unless $weight_fraction > 0.0;
+        die "pu239_240_oxide material error: pu239_240_oxide_weight_fraction must be less than 1.0\n" if $weight_fraction > 1.0;
+}
+</perl>
+# -- Calculate weight fractions for all of the nuclides --
+# Atom fraction of element 94:
+#       <elemfrac_94_in_pu239_240_oxide = 0.333333333333>
+#
+# Atomic masses:
+#       <mass_94240 = 240.0538138>
+#       <mass_94239 = 239.0521636>
+#
+# Nuclide atom fractions:
+#       <atom_fraction_94240 = elemfrac_94_in_pu239_240_oxide * (pu239_240_oxide_weight_fraction / mass_94240) / (pu239_240_oxide_weight_fraction / mass_94240 + (1 - pu239_240_oxide_weight_fraction) / mass_94239)>
+#       <atom_fraction_94239 = elemfrac_94_in_pu239_240_oxide * ((1 - pu239_240_oxide_weight_fraction) / mass_94239) / (pu239_240_oxide_weight_fraction / mass_94240 + (1 - pu239_240_oxide_weight_fraction) / mass_94239)> 
+#       <atom_fraction_8016 = 0.666666666667>
+#
+m<pu239_240_oxide|3l>    8016.80c    <atom_fraction_8016|7s>
+       94239.80c    <atom_fraction_94239|7s>
+       94240.80c    <atom_fraction_94240|7s>

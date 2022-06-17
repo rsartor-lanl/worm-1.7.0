@@ -1,0 +1,60 @@
+C ------------------------------------------------------------------------------
+C 238Pu & 239Pu Metal-Water Mechanical Mixture:
+C Density = <pu238_239_water_density | 2.6> g/cc
+C
+C User must define the fissile concentration within the input file.
+C Variable: pu238_239_water_concentration = <pu238_239_water_concentration>
+C Variable Range: (0 < pu238_239_water_concentration < 19.84)
+C
+C User must define the weight fraction for 94238 within the input file.
+C Variable: pu238_239_weight_fraction = <pu238_239_weight_fraction>
+C Variable Range: (0.349 < pu238_239_weight_fraction <= 1.0)
+C ------------------------------------------------------------------------------
+C Variable passed check (0 = yes, 1 = no): <&pu238_239_water_validate_input(pu238_239_water_concentration)>
+<perl>
+sub pu238_239_water_validate_input {
+        my $concentration = shift;
+        die "pu238_239_water material error: pu238_239_water_concentration must be defined\n" unless defined $concentration;
+        die "pu238_239_water material error: pu238_239_water_concentration must be greater than 0\n" unless $concentration > 0;
+        die "pu238_239_water material error: pu238_239_water_concentration must be less than 19.84\n" if $concentration >= 19.84;
+}
+</perl>
+C Variable passed check (0 = yes, 1 = no): <&pu238_239_validate_input(pu238_239_weight_fraction)>
+<perl>
+sub pu238_239_validate_input {
+        my $weight_fraction = shift;
+        die "pu238_239 material error: pu238_239_weight_fraction must be defined\n" unless defined $weight_fraction;
+        die "pu238_239 material error: pu238_239_weight_fraction must be greater than 0.349\n" unless $weight_fraction > 0.349;
+        die "pu238_239 material error: pu238_239_weight_fraction must be less than 1.0\n" if $weight_fraction > 1.0;
+}
+</perl>
+# -- Calculate weight fractions for all of the nuclides --
+#
+# Nuclide weight fractions for pu238_239:
+# 	<pu238_239_wf_94238 = pu238_239_weight_fraction>
+# 	<pu238_239_wf_94239 = (1 - pu238_239_weight_fraction) * 1.0>
+#
+# Nuclide weight fractions for water:
+# 	<water_wf_1001 = 0.11191487328808075>
+# 	<water_wf_8016 = 0.8880851267119192>
+#
+# Update density and concentration (adjusted by (1 + (1- wf_fissile) / wf_fissile) if fissile material is within a compound):
+# 	 <density_water = 1.0> g/cc 
+# 	 <density_pu238_239 = 19.84> g/cc 
+# 	 <c_pu238_239 = pu238_239_water_concentration> g/cc 
+# 	 <pu238_239_water_density = density_water + c_pu238_239 * (1 - (density_water / density_pu238_239))> g/cc
+#
+# Weight fraction of solute:
+# 	<wf_pu238_239 = 1 / (1 + density_water * ((1 / c_pu238_239) - (1 / density_pu238_239)))>
+#
+# Nuclide weight fractions:
+# 	<weight_fraction_1001 = water_wf_1001 * (1 - wf_pu238_239) >
+# 	<weight_fraction_8016 = water_wf_8016 * (1 - wf_pu238_239) >
+# 	<weight_fraction_94238 = pu238_239_wf_94238 * wf_pu238_239 >
+# 	<weight_fraction_94239 = pu238_239_wf_94239 * wf_pu238_239 >
+#
+m<pu238_239_water|3l>    1001.80c    <-weight_fraction_1001|7s>
+        8016.80c    <-weight_fraction_8016|7s>
+       94238.80c    <-weight_fraction_94238|7s>
+       94239.80c    <-weight_fraction_94239|7s>
+mt<pu238_239_water|3l>    lwtr.20t

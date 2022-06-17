@@ -1,0 +1,14 @@
+################################################################################
+<perl>
+sub minfct
+# return the minimum of the function arguments
+# the function call can contain any number of arguments 
+{
+  my($minimum) = shift @_;
+  foreach (@_) {
+    if ($_ < $minimum) {$minimum = $_}
+  }
+  return $minimum;
+}
+</perl>
+################################################################################

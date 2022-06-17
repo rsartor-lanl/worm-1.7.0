@@ -1,0 +1,33 @@
+################################################################################
+<perl>
+sub lattice_parameter
+# returns a parameter for a linear lattice centered on the origin
+# input
+#   $_[0] = number of cells
+#   $_[1] = cell length
+#   $_[2] = index to the output parameter
+# output
+#   $_[2] = 0: array length
+#   $_[2] = 1: minimum index number
+#   $_[2] = 2: maximum index number
+#   $_[2] = 3: minimum cell coordinate
+#   $_[2] = 4: maximum cell coordinate
+#   $_[2] = 5: minimum array coordinate
+#   $_[2] = 6: maximum array coordinate
+#   $_[2] = 7: cell translation distance
+{
+  my($n,$l,@parm);
+  $n = $_[0];
+  $l = $_[1];
+  $parm[0] = $n*$l;                         # array length
+  $parm[2] = ($n-$n%2)/2;                   # maximum index number
+  $parm[1] = $parm[2] - ($n-1);             # minimum index number
+  $parm[3] = -0.5*$l;                       # minimum cell coordinate
+  $parm[4] = -$parm[3];                     # maximum cell coordinate
+  $parm[5] = -0.5*$parm[0];                 # minimum array coordinate
+  $parm[6] = -$parm[5];                     # maximum array coordinate
+  $parm[7] = ($parm[1]+$parm[2])*$parm[4];  # cell translation distance
+  return $parm[$_[2]];
+}
+</perl>
+################################################################################

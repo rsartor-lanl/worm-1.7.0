@@ -1,0 +1,14 @@
+################################################################################
+<perl>
+sub maxfct
+# return the maximum of the function arguments
+# the function call can contain any number of arguments 
+{
+  my($maximum) = shift @_;
+  foreach (@_) {
+    if ($_ > $maximum) {$maximum = $_}
+  }
+  return $maximum;
+}
+</perl>
+################################################################################

@@ -1,0 +1,20 @@
+C ------------------------------------------------------------------------------
+C CELOTEX(R):
+C
+C User must define the density within the input file.
+C Variable: celotex_density = <celotex_density>
+C Variable Range: (0.16 < celotex_density <= 0.497)
+C ------------------------------------------------------------------------------
+C Variable passed check (0 = yes, 1 = no): <&celotex_validate_input(celotex_density)>
+<perl>
+sub celotex_validate_input {
+        my $density = shift;
+        die "celotex material error: celotex_density must be defined\n" unless defined $density;
+        die "celotex material error: celotex_density must be greater than 0.16\n" unless $density > 0.16;
+        die "celotex material error: celotex_density must be less than 0.497\n" if $density > 0.497;
+}
+</perl>
+m<celotex|3l>    1001.80c    -6.216444E-02
+        6000.80c    -4.445381E-01
+        8016.80c    -4.932974E-01
+mt<celotex|3l>    poly.20t

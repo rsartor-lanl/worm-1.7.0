@@ -1,0 +1,14 @@
+################################################################################
+<perl>
+sub number_string 
+#
+# subroutine arguments
+#   1. input string
+#   2. starting position of the number
+#      (the first character is position 0)
+#   3. number of characters in the number
+{
+  return 0+substr($_[0],$_[1],$_[2]);
+}
+</perl>
+################################################################################

@@ -1,0 +1,53 @@
+C ------------------------------------------------------------------------------
+C BISCO(R) NS-4 FR with B_4C:
+C Density = <bisco_NS4FR_B4C_density = 1.68 | 2.3 > g/cc
+C
+C User must define the weight fraction for b4c within the input file.
+C Variable: bisco_NS4FR_B4C_b4c_weight_fraction = <bisco_NS4FR_B4C_b4c_weight_fraction>
+C Variable Range: (0 <= bisco_NS4FR_B4C_b4c_weight_fraction <= 0.065)
+C ------------------------------------------------------------------------------
+C Variable passed check (0 = yes, 1 = no): <&bisco_NS4FR_B4C_validate_input(bisco_NS4FR_B4C_b4c_weight_fraction)>
+<perl>
+sub bisco_NS4FR_B4C_validate_input {
+        my $weight_fraction = shift;
+        die "bisco_NS4FR_B4C material error: bisco_NS4FR_B4C_b4c_weight_fraction must be defined\n" unless defined $weight_fraction;
+        die "bisco_NS4FR_B4C material error: bisco_NS4FR_B4C_b4c_weight_fraction must be greater than 0\n" unless $weight_fraction >= 0;
+        die "bisco_NS4FR_B4C material error: bisco_NS4FR_B4C_b4c_weight_fraction must be less than 0.065\n" if $weight_fraction > 0.065;
+}
+</perl>
+# -- Calculate weight fractions for all of the nuclides --
+# Nuclide weight fractions:
+#       <bisco_NS4FR_wf_1001 = 0.06|f>
+#       <weight_fraction_1001 = bisco_NS4FR_wf_1001 * (1 - bisco_NS4FR_B4C_b4c_weight_fraction)>
+#
+#       <b4c_wf_5010 = 0.14425123967232967|f>
+#       <weight_fraction_5010 = b4c_wf_5010 * bisco_NS4FR_B4C_b4c_weight_fraction>
+#
+#       <b4c_wf_5011 = 0.638368581984019|f>
+#       <weight_fraction_5011 = b4c_wf_5011 * bisco_NS4FR_B4C_b4c_weight_fraction>
+#
+#       <b4c_wf_6000 = 0.2173801783436514|f>
+#       <bisco_NS4FR_wf_6000 = 0.277|f>
+#       <weight_fraction_6000 = b4c_wf_6000 * bisco_NS4FR_B4C_b4c_weight_fraction + bisco_NS4FR_wf_6000 * (1 - bisco_NS4FR_B4C_b4c_weight_fraction)>
+#
+#       <bisco_NS4FR_wf_7014 = 0.01992203676258764|f>
+#       <weight_fraction_7014 = bisco_NS4FR_wf_7014 * (1 - bisco_NS4FR_B4C_b4c_weight_fraction)>
+#
+#       <bisco_NS4FR_wf_7015 = 7.79632374123636e-05|f>
+#       <weight_fraction_7015 = bisco_NS4FR_wf_7015 * (1 - bisco_NS4FR_B4C_b4c_weight_fraction)>
+#
+#       <bisco_NS4FR_wf_8016 = 0.428|f>
+#       <weight_fraction_8016 = bisco_NS4FR_wf_8016 * (1 - bisco_NS4FR_B4C_b4c_weight_fraction)>
+#
+#       <bisco_NS4FR_wf_13027 = 0.215|f>
+#       <weight_fraction_13027 = bisco_NS4FR_wf_13027 * (1 - bisco_NS4FR_B4C_b4c_weight_fraction)>
+#
+m<bisco_NS4FR_B4C|3l>    1001.80c    <-weight_fraction_1001|7s>
+        5010.80c    <-weight_fraction_5010|7s>
+        5011.80c    <-weight_fraction_5011|7s>
+        6000.80c    <-weight_fraction_6000|7s>
+        7014.80c    <-weight_fraction_7014|7s>
+        7015.80c    <-weight_fraction_7015|7s>
+        8016.80c    <-weight_fraction_8016|7s>
+       13027.80c    <-weight_fraction_13027|7s>
+mt<bisco_NS4FR_B4C|3l>    poly.20t

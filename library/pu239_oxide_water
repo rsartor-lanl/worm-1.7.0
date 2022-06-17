@@ -1,0 +1,45 @@
+C ------------------------------------------------------------------------------
+C 239Pu Oxide-Water Mechanical Mixture:
+C Density = <pu239_oxide_water_density | 2.6> g/cc
+C
+C User must define the fissile concentration within the input file.
+C Variable: pu239_oxide_water_concentration = <pu239_oxide_water_concentration>
+C Variable Range: (0 < pu239_oxide_water_concentration < 11.46)
+C ------------------------------------------------------------------------------
+C Variable passed check (0 = yes, 1 = no): <&pu239_oxide_water_validate_input(pu239_oxide_water_concentration)>
+<perl>
+sub pu239_oxide_water_validate_input {
+        my $concentration = shift;
+        die "pu239_oxide_water material error: pu239_oxide_water_concentration must be defined\n" unless defined $concentration;
+        die "pu239_oxide_water material error: pu239_oxide_water_concentration must be greater than 0\n" unless $concentration > 0;
+        die "pu239_oxide_water material error: pu239_oxide_water_concentration must be less than 11.46\n" if $concentration >= 11.46;
+}
+</perl>
+# -- Calculate weight fractions for all of the nuclides --
+# Nuclide weight fractions for pu239_oxide:
+# 	<pu239_oxide_wf_8016 = 0.11802536169413999>
+# 	<pu239_oxide_wf_94239 = 0.8819746383058599>
+#
+# Nuclide weight fractions for water:
+# 	<water_wf_1001 = 0.11191487328808075>
+# 	<water_wf_8016 = 0.8880851267119192>
+#
+# Update density and concentration (adjusted by (1 + (1- wf_fissile) / wf_fissile) if fissile material is within a compound):
+# 	 <adjust_for_compound = 1.1338194507733794> 
+# 	 <density_water = 1.0> g/cc 
+# 	 <density_pu239_oxide = 11.46> g/cc 
+# 	 <c_pu239_oxide = pu239_oxide_water_concentration * adjust_for_compound> g/cc 
+# 	 <pu239_oxide_water_density = density_water + c_pu239_oxide * (1 - (density_water / density_pu239_oxide))> g/cc
+#
+# Weight fraction of solute:
+# 	<wf_pu239_oxide = 1 / (1 + density_water * ((1 / c_pu239_oxide) - (1 / density_pu239_oxide)))>
+#
+# Nuclide weight fractions:
+# 	<weight_fraction_1001 = water_wf_1001 * (1 - wf_pu239_oxide) >
+# 	<weight_fraction_8016 = pu239_oxide_wf_8016 * wf_pu239_oxide + water_wf_8016 * (1 - wf_pu239_oxide) >
+# 	<weight_fraction_94239 = pu239_oxide_wf_94239 * wf_pu239_oxide >
+#
+m<pu239_oxide_water|3l>    1001.80c    <-weight_fraction_1001|7s>
+        8016.80c    <-weight_fraction_8016|7s>
+       94239.80c    <-weight_fraction_94239|7s>
+mt<pu239_oxide_water|3l>    lwtr.20t

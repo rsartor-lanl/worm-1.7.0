@@ -1,0 +1,57 @@
+C ------------------------------------------------------------------------------
+C Leaded Glass:
+C Density = <glass_lead_density | 2.6> g/cc
+C
+C User must define the weight fraction for lead_oxide within the input file.
+C Variable: glass_lead_lead_oxide_weight_fraction = <glass_lead_lead_oxide_weight_fraction>
+C Variable Range: (0 <= glass_lead_lead_oxide_weight_fraction <= 0.8)
+C ------------------------------------------------------------------------------
+C Variable passed check (0 = yes, 1 = no): <&glass_lead_validate_input(glass_lead_lead_oxide_weight_fraction)>
+<perl>
+sub glass_lead_validate_input {
+        my $weight_fraction = shift;
+        die "glass_lead material error: glass_lead_lead_oxide_weight_fraction must be defined\n" unless defined $weight_fraction;
+        die "glass_lead material error: glass_lead_lead_oxide_weight_fraction must be greater than 0\n" unless $weight_fraction >= 0;
+        die "glass_lead material error: glass_lead_lead_oxide_weight_fraction must be less than 0.8\n" if $weight_fraction > 0.8;
+}
+</perl>
+# -- Calculate weight fractions for all of the nuclides --
+# Material densities:
+#       <lead_oxide_density = 9.64>
+#       <silicon_dioxide_density = 2.648>
+#       <glass_lead_density = 1 / ( glass_lead_lead_oxide_weight_fraction / lead_oxide_density + (1 - glass_lead_lead_oxide_weight_fraction) / silicon_dioxide_density)>
+#
+# Nuclide weight fractions:
+#       <lead_oxide_wf_8016 = 0.0716580081975156|f>
+#       <silicon_dioxide_wf_8016 = 0.5324952910537463|f>
+#       <weight_fraction_8016 = lead_oxide_wf_8016 * glass_lead_lead_oxide_weight_fraction + silicon_dioxide_wf_8016 * (1 - glass_lead_lead_oxide_weight_fraction)>
+#
+#       <silicon_dioxide_wf_14028 = 0.42948015168119996|f>
+#       <weight_fraction_14028 = silicon_dioxide_wf_14028 * (1 - glass_lead_lead_oxide_weight_fraction)>
+#
+#       <silicon_dioxide_wf_14029 = 0.022597442602342598|f>
+#       <weight_fraction_14029 = silicon_dioxide_wf_14029 * (1 - glass_lead_lead_oxide_weight_fraction)>
+#
+#       <silicon_dioxide_wf_14030 = 0.015427114662711247|f>
+#       <weight_fraction_14030 = silicon_dioxide_wf_14030 * (1 - glass_lead_lead_oxide_weight_fraction)>
+#
+#       <lead_oxide_wf_82204 = 0.012793330486176738|f>
+#       <weight_fraction_82204 = lead_oxide_wf_82204 * glass_lead_lead_oxide_weight_fraction>
+#
+#       <lead_oxide_wf_82206 = 0.22238896505178818|f>
+#       <weight_fraction_82206 = lead_oxide_wf_82206 * glass_lead_lead_oxide_weight_fraction>
+#
+#       <lead_oxide_wf_82207 = 0.2049249576190654|f>
+#       <weight_fraction_82207 = lead_oxide_wf_82207 * glass_lead_lead_oxide_weight_fraction>
+#
+#       <lead_oxide_wf_82208 = 0.488234738645454|f>
+#       <weight_fraction_82208 = lead_oxide_wf_82208 * glass_lead_lead_oxide_weight_fraction>
+#
+m<glass_lead|3l>    8016.80c    <-weight_fraction_8016|7s>
+       14028.80c    <-weight_fraction_14028|7s>
+       14029.80c    <-weight_fraction_14029|7s>
+       14030.80c    <-weight_fraction_14030|7s>
+       82204.80c    <-weight_fraction_82204|7s>
+       82206.80c    <-weight_fraction_82206|7s>
+       82207.80c    <-weight_fraction_82207|7s>
+       82208.80c    <-weight_fraction_82208|7s>
